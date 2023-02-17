@@ -14,13 +14,11 @@ class MainViewController: UIViewController {
     private let viewModel = MainViewModel()
     
     private let disposeBag = DisposeBag()
-    
-    var count = 0
-    
+        
     private let digitsLabel: UILabel = {
         let label = UILabel()
-        label.text = "99999"
-        label.font = UIFont.systemFont(ofSize: 20)
+        label.text = ""
+        label.font = UIFont.systemFont(ofSize: 40)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.2
@@ -43,7 +41,7 @@ class MainViewController: UIViewController {
     }
     
     override func viewDidDisappear(_ animated: Bool) {
-        print(count)
+
     }
     
     private func setupView() {
@@ -69,9 +67,12 @@ class MainViewController: UIViewController {
             .tap
             .throttle(.milliseconds(50), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.count += 1
-                self?.digitsLabel.text = "\(self?.count ?? 0)"
+                self?.viewModel.update()
             })
+            .disposed(by: disposeBag)
+        
+        viewModel.countSubj
+            .bind(to: digitsLabel.rx.text)
             .disposed(by: disposeBag)
     }
 }
