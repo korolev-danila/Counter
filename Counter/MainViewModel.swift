@@ -10,10 +10,27 @@ import RxSwift
 final class MainViewModel {
     
     var countSubj = PublishSubject<String>()
-    var count = 0
-    
-    func update() {
-        count += 1
-        countSubj.onNext("\(count)")
+    var isPlus = true
+    var count = 0 {
+        didSet {
+            countSubj.onNext("\(count)")
+        }
     }
+    
+    func updateCount() {
+        if isPlus {
+            count += 1
+        } else {
+            count -= 1
+        }
+    }
+    
+    func changePlus() {
+        isPlus = !isPlus
+    }
+    
+    func zeroingCount() {
+        count = 0
+    }
+    
 }
