@@ -162,19 +162,17 @@ class MainViewController: UIViewController {
         guard let goToCenter = goToTableButtonCenter,
               let changeCenter = changePlusButtonCenter,
               let zeroimgCenter = zeroingButtonCenter else { return }
-    /*
+    
         let bool = buttonsIsHidden
-        buttonsIsHidden = !bool
 
         if bool {
-            perform(#selector(hideShuffleButton), with: nil, afterDelay: 0.35)
+            shuffleButton.isEnabled = false
+            buttonsIsHidden = false
         } else {
-            shuffleButton.isHidden = false
-            shuffleButton.alpha = 0
-            perform(#selector(hideButtons), with: nil, afterDelay: 0.35)
+            perform(#selector(hideButtons), with: nil, afterDelay: 0.25)
         }
 
-        UIView.animate(withDuration: 0.4) {
+        UIView.animate(withDuration: 0.3) {
             self.changePlusButton.center = bool ? changeCenter : self.shuffleButton.center
             self.goToTableButton.center = bool ? goToCenter : self.shuffleButton.center
             self.zeroingButton.center = bool ? zeroimgCenter : self.shuffleButton.center
@@ -184,43 +182,10 @@ class MainViewController: UIViewController {
             self.zeroingButton.alpha = bool ? 1 : 0
             self.shuffleButton.alpha = bool ? 0 : 1
         }
-     */
-
-        if buttonsIsHidden {
-            UIView.animate(withDuration: 0.4) {
-                self.buttonsIsHidden = false
-                self.changePlusButton.center = changeCenter
-                self.goToTableButton.center = goToCenter
-                self.zeroingButton.center = zeroimgCenter
-
-                self.changePlusButton.alpha = 1
-                self.goToTableButton.alpha = 1
-                self.zeroingButton.alpha = 1
-                self.shuffleButton.alpha = 0
-            }
-            perform(#selector(hideShuffleButton), with: nil, afterDelay: 0.35)
-        } else {
-            shuffleButton.isHidden = false
-            shuffleButton.alpha = 0
-
-            UIView.animate(withDuration: 0.4) {
-                self.changePlusButton.center = self.shuffleButton.center
-                self.goToTableButton.center = self.shuffleButton.center
-                self.zeroingButton.center = self.shuffleButton.center
-
-                self.changePlusButton.alpha = 0
-                self.goToTableButton.alpha = 0
-                self.zeroingButton.alpha = 0
-                self.shuffleButton.alpha = 1
-            }
-            perform(#selector(hideButtons), with: nil, afterDelay: 0.35)
-        }
-    }
-    @objc private func hideShuffleButton() {
-        shuffleButton.isHidden = true
     }
     @objc private func hideButtons() {
         buttonsIsHidden = true
+        shuffleButton.isEnabled = true
     }
     
     private func animatePlus(_ bool: Bool) {
