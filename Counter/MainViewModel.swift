@@ -25,8 +25,9 @@ final class MainViewModel {
         }
     }
     
-    func changePlus() {
+    func changePlus() -> Bool {
         isPlus = !isPlus
+        return isPlus
     }
     
     func zeroingCount() {

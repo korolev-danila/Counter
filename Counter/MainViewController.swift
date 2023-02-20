@@ -15,17 +15,14 @@ class MainViewController: UIViewController {
     
     private let disposeBag = DisposeBag()
     
-    private var changePlusButtonCenter: CGPoint!
-    private var goToTableButtonCenter: CGPoint!
-    private var zeroingButtonCenter: CGPoint!
-    private var buttonsHidden = false {
+    private var changePlusButtonCenter: CGPoint?
+    private var goToTableButtonCenter: CGPoint?
+    private var zeroingButtonCenter: CGPoint?
+    private var buttonsIsHidden = false {
         didSet {
-            UIView.transition(with: view, duration: 0.4, options: .transitionCrossDissolve) {
-                self.shuffleButton.isHidden = !self.buttonsHidden
-                self.changePlusButton.isHidden = self.buttonsHidden
-                self.goToTableButton.isHidden = self.buttonsHidden
-                self.zeroingButton.isHidden = self.buttonsHidden
-            }
+            changePlusButton.isHidden = buttonsIsHidden
+            goToTableButton.isHidden = buttonsIsHidden
+            zeroingButton.isHidden = buttonsIsHidden
         }
     }
     
@@ -52,7 +49,7 @@ class MainViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "minus.circle", withConfiguration:
-                                    UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal) // minus.circle
+                                    UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal)
         button.contentMode = .scaleAspectFit
         button.tintColor = .label
         return button
@@ -62,10 +59,23 @@ class MainViewController: UIViewController {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus.circle", withConfiguration:
-                                    UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal) // minus.circle
+                                    UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal)
         button.contentMode = .scaleAspectFit
         button.tintColor = .label
         return button
+    }()
+    
+    private let mockPlusImg: UIImageView = {
+        let view = UIImageView()
+        view.image = UIImage(systemName: "minus.circle",
+                             withConfiguration: UIImage.SymbolConfiguration(pointSize: 44,
+                                                                            weight: .regular))
+        view.tintColor = .label
+        view.contentMode = .scaleToFill
+        view.contentMode = .center
+        view.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2.0)
+        view.isHidden = true
+        return view
     }()
     
     private let goToTableButton: UIButton = {
@@ -107,6 +117,7 @@ class MainViewController: UIViewController {
         
         view.addSubview(shuffleButton)
         view.addSubview(changePlusButton)
+        view.addSubview(mockPlusImg)
         view.addSubview(goToTableButton)
         view.addSubview(zeroingButton)
         
@@ -122,15 +133,17 @@ class MainViewController: UIViewController {
                                      width: 64, height: 64)
         
         changePlusButton.frame = CGRect(x: view.center.x - 96,
-                                     y: view.frame.size.height - 136,
-                                     width: 64, height: 64)
+                                        y: view.frame.size.height - 136,
+                                        width: 64, height: 64)
+        mockPlusImg.frame = CGRect(x: 0, y: 0, width: 44, height: 44)
+        mockPlusImg.center = changePlusButton.center
         goToTableButton.frame = CGRect(x: view.center.x - 32,
-                                     y: view.frame.size.height - 136,
-                                     width: 64, height: 64)
+                                       y: view.frame.size.height - 136,
+                                       width: 64, height: 64)
         zeroingButton.frame = CGRect(x: view.center.x + 32,
                                      y: view.frame.size.height - 136,
                                      width: 64, height: 64)
-
+        
         changePlusButtonCenter = changePlusButton.center
         goToTableButtonCenter = goToTableButton.center
         zeroingButtonCenter = zeroingButton.center
@@ -139,60 +152,146 @@ class MainViewController: UIViewController {
         goToTableButton.center = shuffleButton.center
         zeroingButton.center = shuffleButton.center
         
-        buttonsHidden = true
+        buttonsIsHidden = true
+        changePlusButton.alpha = 0
+        goToTableButton.alpha = 0
+        zeroingButton.alpha = 0
     }
     
     private func animateButtons() {
-        if buttonsHidden {
-            UIView.animate(withDuration: 0.4) {
-                self.buttonsHidden = false
-                self.changePlusButton.center = self.changePlusButtonCenter
-                self.goToTableButton.center = self.goToTableButtonCenter
-                self.zeroingButton.center = self.zeroingButtonCenter
-            }
+        guard let goToCenter = goToTableButtonCenter,
+              let changeCenter = changePlusButtonCenter,
+              let zeroimgCenter = zeroingButtonCenter else { return }
+    /*
+        let bool = buttonsIsHidden
+        buttonsIsHidden = !bool
+
+        if bool {
+            perform(#selector(hideShuffleButton), with: nil, afterDelay: 0.35)
         } else {
+            shuffleButton.isHidden = false
+            shuffleButton.alpha = 0
+            perform(#selector(hideButtons), with: nil, afterDelay: 0.35)
+        }
+
+        UIView.animate(withDuration: 0.4) {
+            self.changePlusButton.center = bool ? changeCenter : self.shuffleButton.center
+            self.goToTableButton.center = bool ? goToCenter : self.shuffleButton.center
+            self.zeroingButton.center = bool ? zeroimgCenter : self.shuffleButton.center
+
+            self.changePlusButton.alpha = bool ? 1 : 0
+            self.goToTableButton.alpha = bool ? 1 : 0
+            self.zeroingButton.alpha = bool ? 1 : 0
+            self.shuffleButton.alpha = bool ? 0 : 1
+        }
+     */
+
+        if buttonsIsHidden {
+            UIView.animate(withDuration: 0.4) {
+                self.buttonsIsHidden = false
+                self.changePlusButton.center = changeCenter
+                self.goToTableButton.center = goToCenter
+                self.zeroingButton.center = zeroimgCenter
+
+                self.changePlusButton.alpha = 1
+                self.goToTableButton.alpha = 1
+                self.zeroingButton.alpha = 1
+                self.shuffleButton.alpha = 0
+            }
+            perform(#selector(hideShuffleButton), with: nil, afterDelay: 0.35)
+        } else {
+            shuffleButton.isHidden = false
+            shuffleButton.alpha = 0
+
             UIView.animate(withDuration: 0.4) {
                 self.changePlusButton.center = self.shuffleButton.center
                 self.goToTableButton.center = self.shuffleButton.center
                 self.zeroingButton.center = self.shuffleButton.center
+
+                self.changePlusButton.alpha = 0
+                self.goToTableButton.alpha = 0
+                self.zeroingButton.alpha = 0
+                self.shuffleButton.alpha = 1
             }
-            DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(40) ) {
-                self.buttonsHidden = true
-            }
+            perform(#selector(hideButtons), with: nil, afterDelay: 0.35)
         }
     }
+    @objc private func hideShuffleButton() {
+        shuffleButton.isHidden = true
+    }
+    @objc private func hideButtons() {
+        buttonsIsHidden = true
+    }
     
+    private func animatePlus(_ bool: Bool) {
+        if !bool {
+            UIView.animate(withDuration: 0.25) {
+                self.mockPlusImg.isHidden = false
+                self.changePlusButton.setImage(UIImage(systemName: "minus.circle",
+                                                       withConfiguration:
+                                                        UIImage.SymbolConfiguration(pointSize: 44,
+                                                                                    weight: .regular)), for: .normal)
+                self.mockPlusImg.transform = CGAffineTransform.identity
+            }
+            perform(#selector(hideMockPlus), with: nil, afterDelay: 0.25)
+        } else {
+            UIView.animate(withDuration: 0.25) {
+                self.mockPlusImg.isHidden = false
+                self.mockPlusImg.transform = CGAffineTransform(rotationAngle: CGFloat.pi / 2.0)
+            }
+            perform(#selector(showMockPlus), with: nil, afterDelay: 0.25)
+        }
+    }
+    @objc private func hideMockPlus() {
+        mockPlusImg.isHidden = true
+    }
+    @objc private func showMockPlus() {
+        changePlusButton.setImage(UIImage(systemName: "plus.circle",
+                                          withConfiguration: UIImage.SymbolConfiguration(pointSize: 44,
+                                                                        weight: .regular)), for: .normal)
+        mockPlusImg.isHidden = true
+    }
+    
+    // MARK: - Binding
     private func setupBinding() {
         tapButton.rx
             .tap
             .throttle(.milliseconds(50), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.updateCount()
+                guard let self = self else { return }
+                self.viewModel.updateCount()
+                if !self.buttonsIsHidden {
+                    self.animateButtons()
+                }
             })
             .disposed(by: disposeBag)
-        
         shuffleButton.rx
             .tap
             .subscribe(onNext: { [weak self] in
-                self?.animateButtons()
+                guard let self = self else { return }
+                self.animateButtons()
             })
             .disposed(by: disposeBag)
         changePlusButton.rx
             .tap
+            .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.changePlus()
+                guard let self = self else { return }
+                self.animatePlus(self.viewModel.changePlus())
             })
             .disposed(by: disposeBag)
         goToTableButton.rx
             .tap
             .subscribe(onNext: { [weak self] in
-                self?.animateButtons()
+                guard let self = self else { return }
+                self.animateButtons()
             })
             .disposed(by: disposeBag)
         zeroingButton.rx
             .tap
             .subscribe(onNext: { [weak self] in
-                self?.viewModel.zeroingCount()
+                guard let self = self else { return }
+                self.viewModel.zeroingCount()
             })
             .disposed(by: disposeBag)
         
