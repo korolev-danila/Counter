@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class MainViewController: UIViewController {
+final class MainViewController: UIViewController {
     
     private let viewModel = MainViewModel()
     
@@ -29,25 +29,22 @@ class MainViewController: UIViewController {
     private let digitsLabel: UILabel = {
         let label = UILabel()
         label.text = "121212"
-        label.font = UIFont.systemFont(ofSize: 144)
+        label.font = UIFont.systemFont(ofSize: 212)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1
         label.minimumScaleFactor = 0.02
         label.baselineAdjustment = .alignBaselines
         label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
     
     private let tapButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         return button
     }()
     
     private let shuffleButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "minus.circle", withConfiguration:
                                     UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal)
         button.contentMode = .scaleAspectFit
@@ -57,7 +54,6 @@ class MainViewController: UIViewController {
     
     private let changePlusButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "plus.circle", withConfiguration:
                                     UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal)
         button.contentMode = .scaleAspectFit
@@ -80,7 +76,6 @@ class MainViewController: UIViewController {
     
     private let goToTableButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "arrowshape.turn.up.left.circle", withConfiguration: UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal)
         button.contentMode = .scaleAspectFit
         button.tintColor = .label
@@ -89,7 +84,6 @@ class MainViewController: UIViewController {
     
     private let zeroingButton: UIButton = {
         let button = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setImage(UIImage(systemName: "c.circle", withConfiguration:
                                     UIImage.SymbolConfiguration(pointSize: 44, weight: .regular)), for: .normal)
         button.contentMode = .scaleAspectFit
@@ -109,9 +103,16 @@ class MainViewController: UIViewController {
         
     }
     
+    deinit {
+        print("deinit \(self)" )
+    }
+    
     // MARK: - Private method
     private func setupView() {
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
+        navigationController?.isNavigationBarHidden = true
         view.backgroundColor = .systemBackground
+ 
         view.addSubview(digitsLabel)
         view.addSubview(tapButton)
         
@@ -157,7 +158,8 @@ class MainViewController: UIViewController {
         goToTableButton.alpha = 0
         zeroingButton.alpha = 0
     }
-    
+   
+    // MARK: - Animation
     private func animateButtons() {
         guard let goToCenter = goToTableButtonCenter,
               let changeCenter = changePlusButtonCenter,
@@ -263,5 +265,12 @@ class MainViewController: UIViewController {
         viewModel.countSubj
             .bind(to: digitsLabel.rx.text)
             .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - UIGestureRecognizerDelegate
+extension MainViewController: UIGestureRecognizerDelegate {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
 }

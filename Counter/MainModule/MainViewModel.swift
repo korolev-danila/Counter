@@ -17,6 +17,10 @@ final class MainViewModel {
         }
     }
     
+    deinit {
+        print("deinit \(self.self)" )
+    }
+    
     func updateCount() {
         if isPlus {
             count += 1
