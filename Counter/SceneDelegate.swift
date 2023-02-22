@@ -17,10 +17,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         let window = UIWindow(windowScene: windowScene)
         self.window = window
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context = appDelegate.persistentContainer.viewContext
+        let cdManager = CoreDataManager(context: context)
 
         let navigationController = UINavigationController()
         let mainVC = MainViewController()
-        let tableVC = TableViewController()
+        let tableVM = TableViewModel(cdManager: cdManager)
+        let tableVC = TableViewController(viewModel: tableVM)
         
         navigationController.viewControllers = [tableVC, mainVC]
         
