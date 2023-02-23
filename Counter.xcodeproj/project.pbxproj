@@ -24,6 +24,11 @@
 		8358B5C429A50863007FC869 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8358B5C329A50863007FC869 /* TableViewController.swift */; };
 		8358B5C729A50BC8007FC869 /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8358B5C629A50BC8007FC869 /* TableCell.swift */; };
 		83B8D5B7299FC8D7003D7B96 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B8D5B6299FC8D7003D7B96 /* MainViewModel.swift */; };
+		83DFBDBA29A792D40030DC46 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDB929A792D40030DC46 /* Extension.swift */; };
+		83DFBDBD29A795A50030DC46 /* CoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDBC29A795A50030DC46 /* CoordinatorProtocol.swift */; };
+		83DFBDBF29A795C70030DC46 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDBE29A795C70030DC46 /* AppCoordinator.swift */; };
+		83DFBDC129A796CD0030DC46 /* TableCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDC029A796CD0030DC46 /* TableCoordinator.swift */; };
+		83DFBDC329A7A1B20030DC46 /* MainCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDC229A7A1B20030DC46 /* MainCoordinator.swift */; };
 		8A6ED5712F051BDA27296688 /* Pods_Counter_CounterUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CB5B93DBAFF56C422BEE1B39 /* Pods_Counter_CounterUITests.framework */; };
 		AA9A6587B4F8959112E93A9C /* Pods_CounterTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 27582A4DB2328D0D0905E80D /* Pods_CounterTests.framework */; };
 /* End PBXBuildFile section */
@@ -70,6 +75,11 @@
 		8358B5C329A50863007FC869 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		8358B5C629A50BC8007FC869 /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		83B8D5B6299FC8D7003D7B96 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		83DFBDB929A792D40030DC46 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		83DFBDBC29A795A50030DC46 /* CoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorProtocol.swift; sourceTree = "<group>"; };
+		83DFBDBE29A795C70030DC46 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		83DFBDC029A796CD0030DC46 /* TableCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCoordinator.swift; sourceTree = "<group>"; };
+		83DFBDC229A7A1B20030DC46 /* MainCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainCoordinator.swift; sourceTree = "<group>"; };
 		914D8F0ADD94097C7710FF58 /* Pods-Counter.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Counter.release.xcconfig"; path = "Target Support Files/Pods-Counter/Pods-Counter.release.xcconfig"; sourceTree = "<group>"; };
 		93F4A174648DFB11FE32FFEA /* Pods-Counter-CounterUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Counter-CounterUITests.debug.xcconfig"; path = "Target Support Files/Pods-Counter-CounterUITests/Pods-Counter-CounterUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		9BEFD626E5756B4AAB52062A /* Pods-Counter-CounterUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Counter-CounterUITests.release.xcconfig"; path = "Target Support Files/Pods-Counter-CounterUITests/Pods-Counter-CounterUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -152,9 +162,12 @@
 			children = (
 				83389867299D260400926750 /* AppDelegate.swift */,
 				83389869299D260400926750 /* SceneDelegate.swift */,
+				83DFBDBE29A795C70030DC46 /* AppCoordinator.swift */,
+				83DFBDBB29A7958B0030DC46 /* Protocols */,
 				8358B5C829A50C89007FC869 /* MainModule */,
 				8358B5C529A50B9E007FC869 /* TableModule */,
 				8332C27E29A688A600103498 /* CoreDataFiles */,
+				83DFBDB829A792C10030DC46 /* Extension */,
 				8332C28329A6890B00103498 /* SupportFiles */,
 				83389878299D260600926750 /* Info.plist */,
 			);
@@ -184,6 +197,7 @@
 				8358B5C129A504EE007FC869 /* TableViewModel.swift */,
 				8358B5C329A50863007FC869 /* TableViewController.swift */,
 				8358B5C629A50BC8007FC869 /* TableCell.swift */,
+				83DFBDC029A796CD0030DC46 /* TableCoordinator.swift */,
 			);
 			path = TableModule;
 			sourceTree = "<group>";
@@ -193,8 +207,25 @@
 			children = (
 				8338986B299D260400926750 /* MainViewController.swift */,
 				83B8D5B6299FC8D7003D7B96 /* MainViewModel.swift */,
+				83DFBDC229A7A1B20030DC46 /* MainCoordinator.swift */,
 			);
 			path = MainModule;
+			sourceTree = "<group>";
+		};
+		83DFBDB829A792C10030DC46 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				83DFBDB929A792D40030DC46 /* Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		83DFBDBB29A7958B0030DC46 /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				83DFBDBC29A795A50030DC46 /* CoordinatorProtocol.swift */,
+			);
+			path = Protocols;
 			sourceTree = "<group>";
 		};
 		EA887F088226BA9818F7F892 /* Pods */ = {
@@ -479,11 +510,16 @@
 				83B8D5B7299FC8D7003D7B96 /* MainViewModel.swift in Sources */,
 				8332C28129A688CE00103498 /* Model+CoreDataClass.swift in Sources */,
 				8358B5C429A50863007FC869 /* TableViewController.swift in Sources */,
+				83DFBDBA29A792D40030DC46 /* Extension.swift in Sources */,
 				8332C28229A688CE00103498 /* Model+CoreDataProperties.swift in Sources */,
 				8358B5C229A504EE007FC869 /* TableViewModel.swift in Sources */,
+				83DFBDBF29A795C70030DC46 /* AppCoordinator.swift in Sources */,
 				83389872299D260400926750 /* Counter.xcdatamodeld in Sources */,
+				83DFBDBD29A795A50030DC46 /* CoordinatorProtocol.swift in Sources */,
+				83DFBDC329A7A1B20030DC46 /* MainCoordinator.swift in Sources */,
 				8338986C299D260400926750 /* MainViewController.swift in Sources */,
 				83389868299D260400926750 /* AppDelegate.swift in Sources */,
+				83DFBDC129A796CD0030DC46 /* TableCoordinator.swift in Sources */,
 				8358B5C729A50BC8007FC869 /* TableCell.swift in Sources */,
 				8338986A299D260400926750 /* SceneDelegate.swift in Sources */,
 				8332C28529A6892200103498 /* CoreDataManager.swift in Sources */,

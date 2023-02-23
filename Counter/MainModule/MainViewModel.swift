@@ -9,6 +9,9 @@ import RxSwift
 
 final class MainViewModel {
     
+    private let cdManager: CoreDataProtocol
+    private var model: Model
+    
     var countSubj = PublishSubject<String>()
     var isPlus = true
     var count = 0 {
@@ -17,8 +20,20 @@ final class MainViewModel {
         }
     }
     
+    init(cdManager: CoreDataProtocol, model: Model) {
+        self.cdManager = cdManager
+        self.model = model
+    }
+    
     deinit {
+        model.count = Int64(count)
+        cdManager.saveContext()
         print("deinit \(self.self)" )
+    }
+    
+    func viewDidLoad() {
+        count = Int(model.count)
+        print(count)
     }
     
     func updateCount() {

@@ -11,7 +11,7 @@ import RxCocoa
 
 final class MainViewController: UIViewController {
     
-    private let viewModel = MainViewModel()
+    private let viewModel: MainViewModel
     
     private let disposeBag = DisposeBag()
     
@@ -91,12 +91,21 @@ final class MainViewController: UIViewController {
         return button
     }()
     
+    // MARK: - init
+    init(viewModel: MainViewModel) {
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     // MARK: - viewDidLoad
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
         setupBinding()
-        viewModel.zeroingCount()
+        viewModel.viewDidLoad()
     }
     
     override func viewDidDisappear(_ animated: Bool) {

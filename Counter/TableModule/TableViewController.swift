@@ -58,7 +58,6 @@ extension TableViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
-        navigationController?.pushViewController(MainViewController(), animated: true)
+       // navigationController?.pushViewController(MainViewController(), animated: true)
     }
 }
