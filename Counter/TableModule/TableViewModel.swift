@@ -5,34 +5,50 @@
 //  Created by Данила on 21.02.2023.
 //
 
-import Foundation
+import RxSwift
 
 final class TableViewModel {
     
     private let cdManager: CoreDataProtocol
-    var models: [Model] = []
     
+    var models = PublishSubject<[Model]>()
+    private var modelsArray: [Model] = [] {
+        didSet {
+            models.onNext(modelsArray)
+        }
+    }
+    
+    private let disposeBag = DisposeBag()
+    
+    // MARK: - init
     init(cdManager: CoreDataProtocol) {
         self.cdManager = cdManager
     }
     
-    func fetchModels() {
-        models = cdManager.fetchMyCounters()
-    }
-    
-    func createModel() -> Model? {
+    // MARK: - Private method
+    private func createModel() -> Model? {
         guard let model = cdManager.createNew() else { return nil }
-        models.append(model)
+        modelsArray.append(model)
         cdManager.saveContext()
         return model
     }
     
+    func fetchModels() {
+        modelsArray = cdManager.fetchMyCounters()
+    }
+    
     func transferModel() -> Model? {
-        if models.count == 0 {
+        if modelsArray.count == 0 {
             return createModel()
         } else {
-            guard let model = models[safe: 0] else { return nil }
+            guard let model = modelsArray[safe: 0] else { return nil }
             return model
         }
+    }
+    
+    func addCounter() {
+        guard let model = cdManager.createNew() else { return }
+        cdManager.saveContext()
+        modelsArray.append(model)
     }
 }

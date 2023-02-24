@@ -31,6 +31,6 @@ extension TableCoordinator: CoordinatorProtocol {
         
         let mainCoordinator = MainCoordinator(rootViewController: rootViewController,
                                               cdManager: cdManager, model: lastModel)
-        mainCoordinator.start()
+     //   mainCoordinator.start()
     }
 }
