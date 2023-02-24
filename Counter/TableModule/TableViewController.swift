@@ -13,6 +13,11 @@ final class TableViewController: UIViewController {
     private let viewModel: TableViewModel
     
     private let disposeBag = DisposeBag()
+    
+    var showCounter: (Model) -> () = { _ in }
+    private func pushCounter(_ model: Model) {
+        showCounter(model)
+    }
 
     private let tableView: UITableView = {
         let tv = UITableView(frame: CGRect(), style: .plain)
@@ -43,6 +48,10 @@ final class TableViewController: UIViewController {
         super.viewDidLoad()
         setupView()
         setupBinding()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear table")
         viewModel.fetchModels()
     }
     
@@ -65,8 +74,9 @@ final class TableViewController: UIViewController {
             cell.setModel(item)
         }.disposed(by: disposeBag)
         
-        tableView.rx.modelSelected(Model.self).subscribe( onNext: { item in
-            print(item.count)
+        tableView.rx.modelSelected(Model.self).subscribe( onNext: { [weak self] model in
+            guard let self = self else { return }
+            self.pushCounter(model)
         }).disposed(by: disposeBag)
         
         addButton.rx
@@ -74,8 +84,7 @@ final class TableViewController: UIViewController {
             .subscribe(onNext: { [weak self] in
                 guard let self = self else { return }
                 self.viewModel.addCounter()
-            })
-            .disposed(by: disposeBag)
+            }).disposed(by: disposeBag)
     }
 }
 

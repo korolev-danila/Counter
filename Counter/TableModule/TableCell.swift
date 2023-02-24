@@ -6,8 +6,16 @@
 //
 
 import UIKit
+import RxSwift
 
 final class TableCell: UITableViewCell {
+    
+//    var model = PublishSubject<Model>(){
+//            didSet {
+//                self.updateUI()
+//            }
+//        }
+//    private let disposeBag = DisposeBag()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -24,7 +32,7 @@ final class TableCell: UITableViewCell {
     
     private let countLabel: UILabel = {
         let label = UILabel()
-        label.text = "12"
+        label.text = "999"
         label.font = UIFont.systemFont(ofSize: 20)
         label.adjustsFontSizeToFitWidth = true
         label.numberOfLines = 1

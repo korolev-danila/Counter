@@ -10,12 +10,14 @@ import UIKit
 final class MainCoordinator {
     var rootViewController: UINavigationController
     private let cdManager: CoreDataProtocol
-    private var model: Model?
+    private var model: Model
+    private var isFirstShow: Bool
     
-    init(rootViewController: UINavigationController, cdManager: CoreDataProtocol, model: Model? = nil) {
+    init(rootViewController: UINavigationController, cdManager: CoreDataProtocol, model: Model, isFirstShow: Bool ) {
         self.rootViewController = rootViewController
         self.cdManager = cdManager
         self.model = model
+        self.isFirstShow = isFirstShow
     }
     
     deinit {
@@ -25,17 +27,8 @@ final class MainCoordinator {
 
 extension MainCoordinator: CoordinatorProtocol {
     func start() {
-
-        if let model = model {
-            let mainVM = MainViewModel(cdManager: cdManager, model: model)
-            let mainVC = MainViewController(viewModel: mainVM)
-            rootViewController.pushViewController(mainVC, animated: false)
-        } else {
-            /// first start application
-            guard let newModel = cdManager.createNew() else { return }
-            let mainVM = MainViewModel(cdManager: cdManager, model: newModel)
-            let mainVC = MainViewController(viewModel: mainVM)
-            rootViewController.pushViewController(mainVC, animated: false)
-        }
+        let mainVM = MainViewModel(cdManager: cdManager, model: model)
+        let mainVC = MainViewController(viewModel: mainVM)
+        rootViewController.pushViewController(mainVC, animated: !isFirstShow)
     }
 }
