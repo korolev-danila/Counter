@@ -7,10 +7,29 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
+import RxDataSources
 
 final class TableViewController: UIViewController {
     
     private let viewModel: TableViewModel
+    
+//    typealias ModelListSectionModel = AnimatableSectionModel<String, Model>
+//    var dataSource: RxTableViewSectionedAnimatedDataSource<ModelListSectionModel>!
+    
+    private var dataSource = RxTableViewSectionedAnimatedDataSource<CounterSection>(
+        animationConfiguration: AnimationConfiguration(insertAnimation: .fade,
+                                                       reloadAnimation: .fade,
+                                                       deleteAnimation: .fade),
+        configureCell: { (dataSource, tableView, IndexPath, item) in
+            let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: IndexPath) as! TableCell
+            cell.setViewModel(TableCellViewModel(withCounter: item))
+            return cell
+        },
+        canEditRowAtIndexPath: { (dataSource, IndexPath) in
+            return true
+        }
+    )
     
     private let disposeBag = DisposeBag()
     
@@ -47,32 +66,57 @@ final class TableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setupView()
+        setupNavBar()
         setupBinding()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         print("viewWillAppear table")
+        navigationController?.isNavigationBarHidden = false
         viewModel.fetchModels()
     }
     
     // MARK: - Private methods
     private func setupView() {
         view.addSubview(tableView)
-        view.addSubview(addButton)
+      //  view.addSubview(addButton)
         
         tableView.frame = CGRect(x: 0, y: 0,
                                  width: view.frame.size.width,
                                  height: view.frame.size.height)
-        addButton.frame = CGRect(x: view.frame.size.width - 100,
-                                 y: view.frame.size.height - 100,
-                                 width: 44, height: 44)
+//        addButton.frame = CGRect(x: view.frame.size.width - 100,
+//                                 y: view.frame.size.height - 100,
+//                                 width: 44, height: 44)
     }
     
-    private func setupBinding() {
+    private func setupNavBar() {
+        
+        
+        let addButton = UIBarButtonItem(title: "Add", style: .done, target: self, action: #selector(addNewItem))
+        self.navigationItem.rightBarButtonItem = addButton
+        let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editItems))
+        self.navigationItem.leftBarButtonItem = editButton
+    }
+    @objc func addNewItem() {
+        viewModel.addCounter()
+    }
+    @objc func editItems() {
+        let editMode = tableView.isEditing
+        tableView.setEditing(!editMode, animated: true)
+    }
+    
+ /*
+    private func setupBinding2() {
+        
+        
         viewModel.models.bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, item, cell in
-            guard let cell = cell as? TableCell else { return }
-            cell.setModel(item)
+       //     guard let cell = cell as? TableCell else { return }
+        //    cell.setModel(item)
+
         }.disposed(by: disposeBag)
+        
+        
+        
         
         tableView.rx.modelSelected(Model.self).subscribe( onNext: { [weak self] model in
             guard let self = self else { return }
@@ -85,6 +129,38 @@ final class TableViewController: UIViewController {
                 guard let self = self else { return }
                 self.viewModel.addCounter()
             }).disposed(by: disposeBag)
+    }
+  */
+}
+
+extension TableViewController {
+    private func setupBinding() {
+        setupDataSource()
+        modelSelected()
+        deleteBind()
+    }
+    
+    private func setupDataSource() {
+        viewModel.sections
+            .bind(to: tableView.rx.items(dataSource: dataSource))
+            .disposed(by: disposeBag)
+    }
+    
+    private func modelSelected() {
+        tableView.rx.modelSelected(Model.self).subscribe( onNext: { [weak self] model in
+            guard let self = self else { return }
+            self.pushCounter(model)
+        })
+        .disposed(by: disposeBag)
+    }
+    
+    private func deleteBind() {
+        tableView.rx.itemDeleted
+            .subscribe(onNext: { indexPath in
+              //  self.colors.remove(at: indexPath.row)
+             //   self.sections.accept([ColorSection(items: self.colors)])
+            })
+            .disposed(by: disposeBag)
     }
 }
 

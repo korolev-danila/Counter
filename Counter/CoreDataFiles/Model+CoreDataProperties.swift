@@ -8,6 +8,7 @@
 
 import Foundation
 import CoreData
+import RxDataSources
 
 
 extension Model {
@@ -16,11 +17,16 @@ extension Model {
         return NSFetchRequest<Model>(entityName: "Model")
     }
 
+    @NSManaged public var id: UUID
     @NSManaged public var name: String
     @NSManaged public var count: Int64
-
+    
 }
 
-extension Model : Identifiable {
-
+extension Model: IdentifiableType {
+    public typealias Identity = UUID
+    
+    public var identity: UUID {
+        return id
+    }
 }

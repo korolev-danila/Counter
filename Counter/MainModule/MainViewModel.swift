@@ -12,7 +12,7 @@ final class MainViewModel {
     private let cdManager: CoreDataProtocol
     private var model: Model
     
-    var countSubj = PublishSubject<String>()
+    var countSubj = BehaviorSubject<String>(value: "")
     var isPlus = true
     var count = 0 {
         didSet {

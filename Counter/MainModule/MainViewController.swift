@@ -241,6 +241,7 @@ final class MainViewController: UIViewController {
                 }
             })
             .disposed(by: disposeBag)
+        
         shuffleButton.rx
             .tap
             .subscribe(onNext: { [weak self] in
@@ -248,6 +249,7 @@ final class MainViewController: UIViewController {
                 self.animateButtons()
             })
             .disposed(by: disposeBag)
+        
         changePlusButton.rx
             .tap
             .throttle(.milliseconds(500), scheduler: MainScheduler.instance)
@@ -256,6 +258,7 @@ final class MainViewController: UIViewController {
                 self.animatePlus(self.viewModel.changePlus())
             })
             .disposed(by: disposeBag)
+        
         goToTableButton.rx
             .tap
             .subscribe(onNext: { [weak self] in
@@ -263,6 +266,7 @@ final class MainViewController: UIViewController {
                 self.animateButtons()
             })
             .disposed(by: disposeBag)
+        
         zeroingButton.rx
             .tap
             .subscribe(onNext: { [weak self] in

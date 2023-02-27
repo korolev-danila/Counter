@@ -7,15 +7,13 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 final class TableCell: UITableViewCell {
     
-//    var model = PublishSubject<Model>(){
-//            didSet {
-//                self.updateUI()
-//            }
-//        }
-//    private let disposeBag = DisposeBag()
+    var viewModel: TableCellViewModel!
+
+    let disposeBag = DisposeBag()
     
     private let nameLabel: UILabel = {
         let label = UILabel()
@@ -61,7 +59,14 @@ final class TableCell: UITableViewCell {
                                      width: 20, height: 20)
     }
     
-    func setModel(_ model: Model) {
-        countLabel.text = String(model.count)
+    private func bindViewModel() {
+        viewModel.count
+            .drive(countLabel.rx.text)
+            .disposed(by: disposeBag)
+    }
+    
+    func setViewModel(_ viewModel: TableCellViewModel) {
+        self.viewModel = viewModel
+        bindViewModel()
     }
 }

@@ -31,6 +31,7 @@ final class TableCoordinator {
 extension TableCoordinator: CoordinatorProtocol {
     func start() {
         let tableVM = TableViewModel(cdManager: cdManager)
+    //    tableVM.deleteAll()
         tableVM.fetchModels()
         let lastModel = tableVM.transferModel()
         let tableVC = TableViewController(viewModel: tableVM)
@@ -41,9 +42,9 @@ extension TableCoordinator: CoordinatorProtocol {
             self.showCounter(model)
         }
         
-        if let model = lastModel {
-            showCounter(model)
-        }
+//        if let model = lastModel {
+//            showCounter(model)
+//        }
         isFirstShowMain = false
     }
 }

@@ -61,6 +61,7 @@ extension CoreDataManager: CoreDataProtocol {
         let counter = Model(entity: entity , insertInto: context)
         counter.name = ""
         counter.count = 0
+        counter.id = UUID()
         return counter
     }
 

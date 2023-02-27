@@ -5,21 +5,27 @@
 //  Created by Данила on 21.02.2023.
 //
 
+import RxCocoa
 import RxSwift
 
 final class TableViewModel {
     
     private let cdManager: CoreDataProtocol
     
+    var sections = BehaviorRelay<[CounterSection]>(value: [])
+  //  let sectionDatas = [CustomSectionDataType(ID: "1", header: "test", items: ["WTF!"])]
+ //   let items = BehaviorRelay(value: [sectionDatas])
+
+
     var models = PublishSubject<[Model]>()
-    private var modelsArray: [Model] = [] {
+    var modelsArray: [Model] = [] {
         didSet {
             models.onNext(modelsArray)
+            let sectionDatas = CounterSection(items: modelsArray)
+            sections.accept([sectionDatas])
         }
     }
-    
-    private let disposeBag = DisposeBag()
-    
+        
     // MARK: - init
     init(cdManager: CoreDataProtocol) {
         self.cdManager = cdManager
@@ -31,6 +37,10 @@ final class TableViewModel {
         modelsArray.append(model)
         cdManager.saveContext()
         return model
+    }
+    
+    func deleteAll() {
+        cdManager.resetAllRecords()
     }
     
     func fetchModels() {

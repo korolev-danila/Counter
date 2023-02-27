@@ -24,6 +24,8 @@
 		8358B5C429A50863007FC869 /* TableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8358B5C329A50863007FC869 /* TableViewController.swift */; };
 		8358B5C729A50BC8007FC869 /* TableCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8358B5C629A50BC8007FC869 /* TableCell.swift */; };
 		83B8D5B7299FC8D7003D7B96 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83B8D5B6299FC8D7003D7B96 /* MainViewModel.swift */; };
+		83D1D57229ACF1C300B47CDD /* TableCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D1D57129ACF1C300B47CDD /* TableCellViewModel.swift */; };
+		83D1D57429AD071400B47CDD /* CountersSectionModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83D1D57329AD071400B47CDD /* CountersSectionModel.swift */; };
 		83DFBDBA29A792D40030DC46 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDB929A792D40030DC46 /* Extension.swift */; };
 		83DFBDBD29A795A50030DC46 /* CoordinatorProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDBC29A795A50030DC46 /* CoordinatorProtocol.swift */; };
 		83DFBDBF29A795C70030DC46 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83DFBDBE29A795C70030DC46 /* AppCoordinator.swift */; };
@@ -75,6 +77,8 @@
 		8358B5C329A50863007FC869 /* TableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableViewController.swift; sourceTree = "<group>"; };
 		8358B5C629A50BC8007FC869 /* TableCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCell.swift; sourceTree = "<group>"; };
 		83B8D5B6299FC8D7003D7B96 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		83D1D57129ACF1C300B47CDD /* TableCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TableCellViewModel.swift; sourceTree = "<group>"; };
+		83D1D57329AD071400B47CDD /* CountersSectionModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountersSectionModel.swift; sourceTree = "<group>"; };
 		83DFBDB929A792D40030DC46 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		83DFBDBC29A795A50030DC46 /* CoordinatorProtocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatorProtocol.swift; sourceTree = "<group>"; };
 		83DFBDBE29A795C70030DC46 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
@@ -194,9 +198,10 @@
 		8358B5C529A50B9E007FC869 /* TableModule */ = {
 			isa = PBXGroup;
 			children = (
+				83D1D57029ACF1A800B47CDD /* TableCellModul */,
 				8358B5C129A504EE007FC869 /* TableViewModel.swift */,
 				8358B5C329A50863007FC869 /* TableViewController.swift */,
-				8358B5C629A50BC8007FC869 /* TableCell.swift */,
+				83D1D57329AD071400B47CDD /* CountersSectionModel.swift */,
 				83DFBDC029A796CD0030DC46 /* TableCoordinator.swift */,
 			);
 			path = TableModule;
@@ -210,6 +215,15 @@
 				83DFBDC229A7A1B20030DC46 /* MainCoordinator.swift */,
 			);
 			path = MainModule;
+			sourceTree = "<group>";
+		};
+		83D1D57029ACF1A800B47CDD /* TableCellModul */ = {
+			isa = PBXGroup;
+			children = (
+				8358B5C629A50BC8007FC869 /* TableCell.swift */,
+				83D1D57129ACF1C300B47CDD /* TableCellViewModel.swift */,
+			);
+			path = TableCellModul;
 			sourceTree = "<group>";
 		};
 		83DFBDB829A792C10030DC46 /* Extension */ = {
@@ -513,6 +527,7 @@
 				83DFBDBA29A792D40030DC46 /* Extension.swift in Sources */,
 				8332C28229A688CE00103498 /* Model+CoreDataProperties.swift in Sources */,
 				8358B5C229A504EE007FC869 /* TableViewModel.swift in Sources */,
+				83D1D57229ACF1C300B47CDD /* TableCellViewModel.swift in Sources */,
 				83DFBDBF29A795C70030DC46 /* AppCoordinator.swift in Sources */,
 				83389872299D260400926750 /* Counter.xcdatamodeld in Sources */,
 				83DFBDBD29A795A50030DC46 /* CoordinatorProtocol.swift in Sources */,
@@ -522,6 +537,7 @@
 				83DFBDC129A796CD0030DC46 /* TableCoordinator.swift in Sources */,
 				8358B5C729A50BC8007FC869 /* TableCell.swift in Sources */,
 				8338986A299D260400926750 /* SceneDelegate.swift in Sources */,
+				83D1D57429AD071400B47CDD /* CountersSectionModel.swift in Sources */,
 				8332C28529A6892200103498 /* CoreDataManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
