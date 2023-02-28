@@ -9,8 +9,8 @@ import RxSwift
 
 final class MainViewModel {
     
-    private let cdManager: CoreDataProtocol
     private var model: Model
+    private let coreData: CoreDataProtocol
     
     var countSubj = BehaviorSubject<String>(value: "")
     var isPlus = true
@@ -20,20 +20,26 @@ final class MainViewModel {
         }
     }
     
-    init(cdManager: CoreDataProtocol, model: Model) {
-        self.cdManager = cdManager
+    var deinitCounter: (Model) -> () = { _ in }
+    
+    init(model: Model, cdManager: CoreDataProtocol) {
         self.model = model
+        self.coreData = cdManager
     }
     
     deinit {
-        model.count = Int64(count)
-        cdManager.saveContext()
+        coreData.saveContext()
         print("deinit \(self.self)" )
     }
-    
+        
     func viewDidLoad() {
         count = Int(model.count)
-        print(count)
+    }
+    
+    func viewWillDisappear() {
+        print("viewWillDisappear")
+        model.count = Int64(count)
+        deinitCounter(model)
     }
     
     func updateCount() {

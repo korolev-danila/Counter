@@ -12,10 +12,7 @@ final class TableViewModel {
     
     private let cdManager: CoreDataProtocol
     
-    var sections = BehaviorRelay<[CounterSection]>(value: [])
-  //  let sectionDatas = [CustomSectionDataType(ID: "1", header: "test", items: ["WTF!"])]
- //   let items = BehaviorRelay(value: [sectionDatas])
-
+    var sections = PublishRelay<[CounterSection]>() //BehaviorRelay
 
     var models = PublishSubject<[Model]>()
     var modelsArray: [Model] = [] {
@@ -31,6 +28,11 @@ final class TableViewModel {
         self.cdManager = cdManager
     }
     
+    deinit {
+        cdManager.saveContext()
+        print("deinit \(self.self)" )
+    }
+    
     // MARK: - Private method
     private func createModel() -> Model? {
         guard let model = cdManager.createNew() else { return nil }
@@ -44,7 +46,14 @@ final class TableViewModel {
     }
     
     func fetchModels() {
-        modelsArray = cdManager.fetchMyCounters()
+        let mod = cdManager.fetchMyCounters()
+        modelsArray = mod
+        let sectionDatas = CounterSection(items: mod)
+        sections.accept([sectionDatas])
+        print("%%%%%%%%%")
+//        for item in modelsArray {
+//            print(item.count)
+//        }
     }
     
     func transferModel() -> Model? {
@@ -60,5 +69,27 @@ final class TableViewModel {
         guard let model = cdManager.createNew() else { return }
         cdManager.saveContext()
         modelsArray.append(model)
+    }
+    
+    func updateModel(_ model: Model, at indexPath: IndexPath?) {
+        print("updateModel " + "\(model.count)" + " at \(String(describing: indexPath))")
+
+    }
+    
+    func deleteItem(at indexPath: IndexPath) {
+        guard let model = modelsArray[safe: indexPath.row] else { return }
+        
+        modelsArray.remove(at: indexPath.row)
+        cdManager.delete(counter: model)
+    }
+    
+    func itemMoved(at indexPaths: ControlEvent<ItemMovedEvent>.Element) {
+        for item in modelsArray {
+            print(item.count)
+        }
+        let item = modelsArray.remove(at: indexPaths.sourceIndex.row)
+        modelsArray.insert(item, at: indexPaths.destinationIndex.row)
+
+   //     self.sections.accept([ColorSection(items: self.colors)])
     }
 }

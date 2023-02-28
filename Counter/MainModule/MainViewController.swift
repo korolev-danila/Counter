@@ -14,7 +14,7 @@ final class MainViewController: UIViewController {
     private let viewModel: MainViewModel
     
     private let disposeBag = DisposeBag()
-    
+        
     private var changePlusButtonCenter: CGPoint?
     private var goToTableButtonCenter: CGPoint?
     private var zeroingButtonCenter: CGPoint?
@@ -108,8 +108,8 @@ final class MainViewController: UIViewController {
         viewModel.viewDidLoad()
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
-        
+    override func viewWillDisappear(_ animated: Bool) {
+        viewModel.viewWillDisappear()
     }
     
     deinit {

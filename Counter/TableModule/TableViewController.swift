@@ -14,9 +14,6 @@ final class TableViewController: UIViewController {
     
     private let viewModel: TableViewModel
     
-//    typealias ModelListSectionModel = AnimatableSectionModel<String, Model>
-//    var dataSource: RxTableViewSectionedAnimatedDataSource<ModelListSectionModel>!
-    
     private var dataSource = RxTableViewSectionedAnimatedDataSource<CounterSection>(
         animationConfiguration: AnimationConfiguration(insertAnimation: .fade,
                                                        reloadAnimation: .fade,
@@ -28,16 +25,17 @@ final class TableViewController: UIViewController {
         },
         canEditRowAtIndexPath: { (dataSource, IndexPath) in
             return true
+        },
+        canMoveRowAtIndexPath: { _, _ in
+            return true
         }
     )
     
     private let disposeBag = DisposeBag()
     
-    var showCounter: (Model) -> () = { _ in }
-    private func pushCounter(_ model: Model) {
-        showCounter(model)
-    }
-
+    var showCounter: (Model, IndexPath) -> () = { _,_ in }
+    
+    // MARK: - UIView
     private let tableView: UITableView = {
         let tv = UITableView(frame: CGRect(), style: .plain)
         tv.register(TableCell.self, forCellReuseIdentifier: "cell")
@@ -71,7 +69,6 @@ final class TableViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-        print("viewWillAppear table")
         navigationController?.isNavigationBarHidden = false
         viewModel.fetchModels()
     }
@@ -79,23 +76,25 @@ final class TableViewController: UIViewController {
     // MARK: - Private methods
     private func setupView() {
         view.addSubview(tableView)
-      //  view.addSubview(addButton)
+        view.addSubview(addButton)
         
         tableView.frame = CGRect(x: 0, y: 0,
                                  width: view.frame.size.width,
                                  height: view.frame.size.height)
-//        addButton.frame = CGRect(x: view.frame.size.width - 100,
-//                                 y: view.frame.size.height - 100,
-//                                 width: 44, height: 44)
+        addButton.frame = CGRect(x: view.frame.size.width - 100,
+                                 y: view.frame.size.height - 100,
+                                 width: 44, height: 44)
     }
     
     private func setupNavBar() {
-        
-        
         let addButton = UIBarButtonItem(title: "Add", style: .done, target: self, action: #selector(addNewItem))
         self.navigationItem.rightBarButtonItem = addButton
         let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editItems))
         self.navigationItem.leftBarButtonItem = editButton
+    }
+    @objc func refresh() {
+        print("refresh")
+        viewModel.fetchModels()
     }
     @objc func addNewItem() {
         viewModel.addCounter()
@@ -104,33 +103,6 @@ final class TableViewController: UIViewController {
         let editMode = tableView.isEditing
         tableView.setEditing(!editMode, animated: true)
     }
-    
- /*
-    private func setupBinding2() {
-        
-        
-        viewModel.models.bind(to: tableView.rx.items(cellIdentifier: "cell")) { row, item, cell in
-       //     guard let cell = cell as? TableCell else { return }
-        //    cell.setModel(item)
-
-        }.disposed(by: disposeBag)
-        
-        
-        
-        
-        tableView.rx.modelSelected(Model.self).subscribe( onNext: { [weak self] model in
-            guard let self = self else { return }
-            self.pushCounter(model)
-        }).disposed(by: disposeBag)
-        
-        addButton.rx
-            .tap
-            .subscribe(onNext: { [weak self] in
-                guard let self = self else { return }
-                self.viewModel.addCounter()
-            }).disposed(by: disposeBag)
-    }
-  */
 }
 
 extension TableViewController {
@@ -138,6 +110,8 @@ extension TableViewController {
         setupDataSource()
         modelSelected()
         deleteBind()
+        
+        addButton.addTarget(self, action: #selector(refresh), for: .touchUpInside)
     }
     
     private func setupDataSource() {
@@ -147,18 +121,27 @@ extension TableViewController {
     }
     
     private func modelSelected() {
-        tableView.rx.modelSelected(Model.self).subscribe( onNext: { [weak self] model in
-            guard let self = self else { return }
-            self.pushCounter(model)
-        })
-        .disposed(by: disposeBag)
+        Observable
+            .zip(tableView.rx.itemSelected, tableView.rx.modelSelected(Model.self))
+            .bind { [unowned self] indexPath, model in
+                showCounter(model, indexPath)
+                print("Selected " + "\(model.count)" + " at \(indexPath)")
+            }
+            .disposed(by: disposeBag)
     }
     
     private func deleteBind() {
         tableView.rx.itemDeleted
-            .subscribe(onNext: { indexPath in
-              //  self.colors.remove(at: indexPath.row)
-             //   self.sections.accept([ColorSection(items: self.colors)])
+            .subscribe(onNext: { [unowned self] indexPath in
+                self.viewModel.deleteItem(at: indexPath)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func itemMoved() {
+        tableView.rx.itemMoved
+            .subscribe(onNext: { [unowned self] indexPaths in
+                self.viewModel.itemMoved(at: indexPaths)
             })
             .disposed(by: disposeBag)
     }
