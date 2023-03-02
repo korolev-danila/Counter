@@ -6,7 +6,6 @@
 //
 //
 
-import Foundation
 import CoreData
 import RxDataSources
 
@@ -20,6 +19,8 @@ extension Model {
     @NSManaged public var id: UUID
     @NSManaged public var name: String
     @NSManaged public var count: Int64
+    @NSManaged public var isPlus: Bool
+    @NSManaged public var index: Int64
     
 }
 

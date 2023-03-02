@@ -94,7 +94,6 @@ final class TableViewController: UIViewController {
     }
     @objc func refresh() {
         print("refresh")
-        viewModel.fetchModels()
     }
     @objc func addNewItem() {
         viewModel.addCounter()
@@ -105,12 +104,13 @@ final class TableViewController: UIViewController {
     }
 }
 
+// MARK: - Binding
 extension TableViewController {
     private func setupBinding() {
         setupDataSource()
         modelSelected()
         deleteBind()
-        
+        itemMoved()
         addButton.addTarget(self, action: #selector(refresh), for: .touchUpInside)
     }
     
@@ -133,7 +133,7 @@ extension TableViewController {
     private func deleteBind() {
         tableView.rx.itemDeleted
             .subscribe(onNext: { [unowned self] indexPath in
-                self.viewModel.deleteItem(at: indexPath)
+                viewModel.deleteItem(at: indexPath)
             })
             .disposed(by: disposeBag)
     }
@@ -141,7 +141,7 @@ extension TableViewController {
     private func itemMoved() {
         tableView.rx.itemMoved
             .subscribe(onNext: { [unowned self] indexPaths in
-                self.viewModel.itemMoved(at: indexPaths)
+                viewModel.itemMoved(at: indexPaths)
             })
             .disposed(by: disposeBag)
     }

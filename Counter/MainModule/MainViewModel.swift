@@ -12,16 +12,20 @@ final class MainViewModel {
     private var model: Model
     private let coreData: CoreDataProtocol
     
-    var countSubj = BehaviorSubject<String>(value: "")
-    var isPlus = true
-    var count = 0 {
+    var countSubj = PublishSubject<String>()
+    private var count = 0 {
         didSet {
             countSubj.onNext("\(count)")
         }
     }
     
-    var deinitCounter: (Model) -> () = { _ in }
-    
+    var isPlusSubj = PublishSubject<Bool>()
+    private var isPlus = true {
+        didSet {
+            isPlusSubj.onNext(isPlus)
+        }
+    }
+        
     init(model: Model, cdManager: CoreDataProtocol) {
         self.model = model
         self.coreData = cdManager
@@ -34,12 +38,12 @@ final class MainViewModel {
         
     func viewDidLoad() {
         count = Int(model.count)
+        isPlus = model.isPlus
     }
     
     func viewWillDisappear() {
-        print("viewWillDisappear")
         model.count = Int64(count)
-        deinitCounter(model)
+        model.isPlus = isPlus
     }
     
     func updateCount() {
@@ -50,13 +54,11 @@ final class MainViewModel {
         }
     }
     
-    func changePlus() -> Bool {
+    func changePlus() {
         isPlus = !isPlus
-        return isPlus
     }
     
     func zeroingCount() {
         count = 0
     }
-    
 }

@@ -12,20 +12,13 @@ final class TableViewModel {
     
     private let cdManager: CoreDataProtocol
     
-    var sections = PublishRelay<[CounterSection]>() //BehaviorRelay
-
-    var models = PublishSubject<[Model]>()
-    var modelsArray: [Model] = [] {
-        didSet {
-            models.onNext(modelsArray)
-            let sectionDatas = CounterSection(items: modelsArray)
-            sections.accept([sectionDatas])
-        }
-    }
-        
+    var sections = BehaviorRelay<[CounterSection]>(value: [])
+    private var modelsArray: [Model] = []
+    
     // MARK: - init
     init(cdManager: CoreDataProtocol) {
         self.cdManager = cdManager
+        fetchModels()
     }
     
     deinit {
@@ -41,55 +34,68 @@ final class TableViewModel {
         return model
     }
     
+    private func updateSections() {
+        let sectionDatas = CounterSection(items: modelsArray)
+        sections.accept([sectionDatas])
+    }
+    
+    private func updateIndex(start: Int, end: Int) {
+        var _start = start
+        var _end = end
+        
+        if end < start { _start = end; _end = start }
+        if _end > modelsArray.count - 1 { _end = modelsArray.count - 1 }
+        
+        for i in _start..._end {
+            guard let item = modelsArray[safe: i] else { return }
+            item.index = Int64(i)
+        }
+        cdManager.saveContext()
+        printAll(modelsArray)
+    }
+    
+    private func printAll(_ arr: [Model]) {
+        var str = "@ array: "
+        for item in arr {
+            str += "\(item.count) / \(item.index) -- "
+        }
+        str.removeLast(4)
+        print(str)
+    }
+    
+    // MARK: -
+    func fetchModels() {
+        let mod = cdManager.fetchMyCounters()
+        modelsArray = mod.sorted { $0.index < $1.index }
+        updateSections()
+        printAll(modelsArray)
+    }
+    
     func deleteAll() {
         cdManager.resetAllRecords()
     }
     
-    func fetchModels() {
-        let mod = cdManager.fetchMyCounters()
-        modelsArray = mod
-        let sectionDatas = CounterSection(items: mod)
-        sections.accept([sectionDatas])
-        print("%%%%%%%%%")
-//        for item in modelsArray {
-//            print(item.count)
-//        }
-    }
-    
-    func transferModel() -> Model? {
-        if modelsArray.count == 0 {
-            return createModel()
-        } else {
-            guard let model = modelsArray[safe: 0] else { return nil }
-            return model
-        }
-    }
-    
     func addCounter() {
         guard let model = cdManager.createNew() else { return }
-        cdManager.saveContext()
+        
+        model.index = Int64(modelsArray.count)
         modelsArray.append(model)
-    }
-    
-    func updateModel(_ model: Model, at indexPath: IndexPath?) {
-        print("updateModel " + "\(model.count)" + " at \(String(describing: indexPath))")
-
+        updateSections()
+        cdManager.saveContext()
     }
     
     func deleteItem(at indexPath: IndexPath) {
         guard let model = modelsArray[safe: indexPath.row] else { return }
         
         modelsArray.remove(at: indexPath.row)
+        updateSections()
         cdManager.delete(counter: model)
+        updateIndex(start: indexPath.row, end: modelsArray.count - 1)
     }
     
     func itemMoved(at indexPaths: ControlEvent<ItemMovedEvent>.Element) {
-        for item in modelsArray {
-            print(item.count)
-        }
         let item = modelsArray.remove(at: indexPaths.sourceIndex.row)
         modelsArray.insert(item, at: indexPaths.destinationIndex.row)
-
-   //     self.sections.accept([ColorSection(items: self.colors)])
+        updateIndex(start: indexPaths.sourceIndex.row, end: indexPaths.destinationIndex.row)
     }
 }
