@@ -34,6 +34,7 @@ final class TableViewController: UIViewController {
     private let disposeBag = DisposeBag()
     
     var showCounter: (Model, IndexPath) -> () = { _,_ in }
+    var showAdd: () -> () = {}
     
     // MARK: - UIView
     private let tableView: UITableView = {
@@ -92,11 +93,11 @@ final class TableViewController: UIViewController {
         let editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editItems))
         self.navigationItem.leftBarButtonItem = editButton
     }
-    @objc func refresh() {
-        print("refresh")
+    @objc func showAddScreen() {
+        showAdd()
     }
     @objc func addNewItem() {
-        viewModel.addCounter()
+   //     viewModel.addCounter()
     }
     @objc func editItems() {
         let editMode = tableView.isEditing
@@ -111,7 +112,7 @@ extension TableViewController {
         modelSelected()
         deleteBind()
         itemMoved()
-        addButton.addTarget(self, action: #selector(refresh), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(showAddScreen), for: .touchUpInside)
     }
     
     private func setupDataSource() {

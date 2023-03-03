@@ -32,6 +32,19 @@ final class TableCoordinator {
                                               model: model, isFirstShow: isFirstShowMain)
         mainCoordinator.start()
     }
+    
+    private func showAddScreen() {
+        let addCoordinator = AddScreenCoordinator(rootViewController: rootViewController, cdManager: coreData)
+        addCoordinator.start()
+        childCoordinator.append(addCoordinator)
+        
+        addCoordinator.dissmisAddScreen = { [unowned self] model in
+            if let model = model {
+                viewModel.addCounter(model: model)
+            }
+            childCoordinator = []
+        }
+    }
 }
 
 extension TableCoordinator: CoordinatorProtocol {
@@ -42,6 +55,11 @@ extension TableCoordinator: CoordinatorProtocol {
         tableVC.showCounter = { [weak self] model, indexPath in
             guard let self = self else { return }
             self.showCounter(model)
+        }
+        
+        tableVC.showAdd = { [weak self] in
+            guard let self = self else { return }
+            self.showAddScreen()
         }
         
         isFirstShowMain = false

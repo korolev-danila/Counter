@@ -111,10 +111,6 @@ final class MainViewController: UIViewController {
         viewModel.viewDidLoad()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        viewModel.viewWillDisappear()
-    }
-    
     deinit {
         print("deinit \(self)" )
     }

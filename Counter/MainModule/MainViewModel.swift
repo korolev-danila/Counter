@@ -15,16 +15,12 @@ final class MainViewModel {
     var countSubj = PublishSubject<String>()
     private var count = 0 {
         didSet {
+            model.count = Int64(count)
             countSubj.onNext("\(count)")
         }
     }
     
     var isPlusSubj = PublishSubject<Bool>()
-    private var isPlus = true {
-        didSet {
-            isPlusSubj.onNext(isPlus)
-        }
-    }
         
     init(model: Model, cdManager: CoreDataProtocol) {
         self.model = model
@@ -38,16 +34,11 @@ final class MainViewModel {
         
     func viewDidLoad() {
         count = Int(model.count)
-        isPlus = model.isPlus
-    }
-    
-    func viewWillDisappear() {
-        model.count = Int64(count)
-        model.isPlus = isPlus
+        isPlusSubj.onNext(model.isPlus)
     }
     
     func updateCount() {
-        if isPlus {
+        if model.isPlus {
             count += 1
         } else {
             count -= 1
@@ -55,7 +46,8 @@ final class MainViewModel {
     }
     
     func changePlus() {
-        isPlus = !isPlus
+        model.isPlus = !model.isPlus
+        isPlusSubj.onNext(model.isPlus)
     }
     
     func zeroingCount() {

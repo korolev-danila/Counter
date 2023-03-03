@@ -75,9 +75,7 @@ final class TableViewModel {
         cdManager.resetAllRecords()
     }
     
-    func addCounter() {
-        guard let model = cdManager.createNew() else { return }
-        
+    func addCounter(model: Model) {
         model.index = Int64(modelsArray.count)
         modelsArray.append(model)
         updateSections()
