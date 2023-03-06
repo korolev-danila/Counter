@@ -23,7 +23,7 @@ final class AddScreenViewController: UIViewController {
         return button
     }()
     
-    private let textField: UITextField = {
+    private let nameTextField: UITextField = {
         let tf = UITextField()
         tf.placeholder = "Name new counter"
         tf.font = UIFont.systemFont(ofSize: 20)
@@ -31,7 +31,6 @@ final class AddScreenViewController: UIViewController {
         tf.layer.cornerRadius = 15.0
         tf.layer.borderWidth = 2.0
         tf.layer.borderColor = UIColor.gray.cgColor
-        tf.translatesAutoresizingMaskIntoConstraints = false
         tf.borderStyle = UITextField.BorderStyle.none
         let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 20, height: tf.frame.height))
         tf.leftView = paddingView
@@ -40,7 +39,61 @@ final class AddScreenViewController: UIViewController {
         tf.keyboardType = UIKeyboardType.default
         tf.returnKeyType = UIReturnKeyType.done
         tf.clearButtonMode = UITextField.ViewMode.whileEditing
+        tf.translatesAutoresizingMaskIntoConstraints = false
         return tf
+    }()
+    
+    private let modLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Select a mode:"
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    private let modPicker: UIPickerView = {
+        let picker = UIPickerView()
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        return picker
+    }()
+    
+    private let startCountLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Start count:"
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    
+    private let countTextField: UITextField = {
+        let tf = UITextField()
+        tf.placeholder = "0"
+        tf.font = UIFont.systemFont(ofSize: 20)
+        tf.backgroundColor = .clear
+        tf.layer.cornerRadius = 15.0
+        tf.layer.borderWidth = 2.0
+        tf.layer.borderColor = UIColor.gray.cgColor
+        tf.borderStyle = UITextField.BorderStyle.none
+        tf.contentMode = .center
+        let paddingView = UIView(frame: CGRect(x: 0, y: 0, width: 12, height: tf.frame.height))
+        tf.leftView = paddingView
+        tf.leftViewMode = UITextField.ViewMode.always
+        tf.autocorrectionType = UITextAutocorrectionType.no
+        tf.keyboardType = UIKeyboardType.numberPad
+        tf.translatesAutoresizingMaskIntoConstraints = false
+        return tf
+    }()
+    
+    private let pickerLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Select a step:"
+        label.textAlignment = .right
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
+    private let valuePicker: UIPickerView = {
+        let picker = UIPickerView()
+        picker.translatesAutoresizingMaskIntoConstraints = false
+        return picker
     }()
     
     private let saveButton: UIButton = {
@@ -76,22 +129,66 @@ final class AddScreenViewController: UIViewController {
     // MARK: - Private methods
     private func setupViews() {
         view.backgroundColor = .systemBackground
-        view.addSubview(textField)
+        view.addSubview(nameTextField)
         view.addSubview(cancelButton)
+        view.addSubview(modLabel)
+        view.addSubview(modPicker)
+        view.addSubview(startCountLabel)
+        view.addSubview(countTextField)
+        view.addSubview(pickerLabel)
+        view.addSubview(valuePicker)
         view.addSubview(saveButton)
         
         NSLayoutConstraint.activate([
-            textField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
-            textField.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
-            textField.heightAnchor.constraint(equalToConstant: 44),
-            textField.topAnchor.constraint(equalTo: view.topAnchor, constant: 8)
+            nameTextField.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 8),
+            nameTextField.trailingAnchor.constraint(equalTo: cancelButton.leadingAnchor),
+            nameTextField.heightAnchor.constraint(equalToConstant: 44),
+            nameTextField.topAnchor.constraint(equalTo: view.topAnchor, constant: 8)
+        ])
+        NSLayoutConstraint.activate([
+            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
+            cancelButton.topAnchor.constraint(equalTo: nameTextField.topAnchor),
+            cancelButton.heightAnchor.constraint(equalToConstant: 44),
+            cancelButton.widthAnchor.constraint(equalToConstant: 66)
         ])
         
         NSLayoutConstraint.activate([
-            cancelButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -8),
-            cancelButton.topAnchor.constraint(equalTo: view.topAnchor, constant: 8),
-            cancelButton.heightAnchor.constraint(equalToConstant: 44),
-            cancelButton.widthAnchor.constraint(equalToConstant: 66)
+            modLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            modLabel.widthAnchor.constraint(equalToConstant: 144),
+            modLabel.heightAnchor.constraint(equalToConstant: 44),
+            modLabel.topAnchor.constraint(equalTo: nameTextField.bottomAnchor, constant: 16)
+        ])
+        NSLayoutConstraint.activate([
+            modPicker.leadingAnchor.constraint(equalTo: modLabel.trailingAnchor, constant: 16),
+            modPicker.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32),
+            modPicker.heightAnchor.constraint(equalToConstant: 44),
+            modPicker.topAnchor.constraint(equalTo: modLabel.topAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            startCountLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            startCountLabel.heightAnchor.constraint(equalToConstant: 44),
+            startCountLabel.trailingAnchor.constraint(equalTo: modLabel.trailingAnchor),
+            startCountLabel.topAnchor.constraint(equalTo: modLabel.bottomAnchor, constant: 16)
+        ])
+        NSLayoutConstraint.activate([
+            countTextField.leadingAnchor.constraint(equalTo: startCountLabel.trailingAnchor, constant: 16),
+            countTextField.heightAnchor.constraint(equalToConstant: 44),
+            countTextField.widthAnchor.constraint(equalToConstant: 44),
+            countTextField.topAnchor.constraint(equalTo: startCountLabel.topAnchor)
+        ])
+        
+        NSLayoutConstraint.activate([
+            pickerLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            pickerLabel.heightAnchor.constraint(equalToConstant: 44),
+            pickerLabel.trailingAnchor.constraint(equalTo: modLabel.trailingAnchor),
+            pickerLabel.topAnchor.constraint(equalTo: startCountLabel.bottomAnchor, constant: 16)
+        ])
+        NSLayoutConstraint.activate([
+            valuePicker.leadingAnchor.constraint(equalTo: pickerLabel.trailingAnchor, constant: 8),
+            valuePicker.heightAnchor.constraint(equalToConstant: 88),
+            valuePicker.widthAnchor.constraint(equalToConstant: 66),
+            valuePicker.centerYAnchor.constraint(equalTo: pickerLabel.centerYAnchor)
         ])
         
         NSLayoutConstraint.activate([
@@ -107,6 +204,8 @@ final class AddScreenViewController: UIViewController {
 extension AddScreenViewController {
     private func setupBinding() {
         bindingButtons()
+        bindingModPicker()
+        bindingValuePicker()
     }
     
     private func bindingButtons() {
@@ -125,6 +224,34 @@ extension AddScreenViewController {
                 dismiss(animated: true, completion: nil)
             })
             .disposed(by: disposeBag)
+    }
+    
+    private func bindingModPicker() {
+        Observable.just(["classic", "minimal", "date counter"])
+                        .bind(to: modPicker.rx.itemTitles) { _, item in
+                            return item
+                        }
+                        .disposed(by: disposeBag)
+
+        modPicker.rx.itemSelected
+                        .subscribe(onNext: { (row, value) in
+                            print("selected: \(row)")
+                        })
+                        .disposed(by: disposeBag)
+    }
+    
+    private func bindingValuePicker() {
+        Observable.just([1, 2, 3, 4, 5, 6, 7, 8, 9])
+                        .bind(to: valuePicker.rx.itemTitles) { _, item in
+                            return "+\(item)"
+                        }
+                        .disposed(by: disposeBag)
+
+        valuePicker.rx.itemSelected
+                        .subscribe(onNext: { (row, value) in
+                            print("selected: \(row)")
+                        })
+                        .disposed(by: disposeBag)
     }
     
 }
