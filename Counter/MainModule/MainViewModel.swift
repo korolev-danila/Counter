@@ -39,9 +39,9 @@ final class MainViewModel {
     
     func updateCount() {
         if model.isPlus {
-            count += 1
+            count += Int(model.value)
         } else {
-            count -= 1
+            count -= Int(model.value)
         }
     }
     

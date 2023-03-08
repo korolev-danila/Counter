@@ -49,6 +49,7 @@ final class TableCoordinator {
 
 extension TableCoordinator: CoordinatorProtocol {
     func start() {
+        coreData.resetAllRecords()
         let tableVC = TableViewController(viewModel: viewModel)
         rootViewController.viewControllers = [tableVC]
         

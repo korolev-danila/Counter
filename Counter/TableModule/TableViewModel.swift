@@ -48,7 +48,7 @@ final class TableViewModel {
         
         for i in _start..._end {
             guard let item = modelsArray[safe: i] else { return }
-            item.index = Int64(i)
+            item.index = Int16(i)
         }
         cdManager.saveContext()
         printAll(modelsArray)
@@ -76,7 +76,7 @@ final class TableViewModel {
     }
     
     func addCounter(model: Model) {
-        model.index = Int64(modelsArray.count)
+        model.index = Int16(modelsArray.count)
         modelsArray.append(model)
         updateSections()
         cdManager.saveContext()

@@ -52,7 +52,12 @@ final class TableCell: UITableViewCell {
     
     // MARK: - Private methods
     private func setupViews() {
+        contentView.addSubview(nameLabel)
         contentView.addSubview(countLabel)
+        
+        nameLabel.frame = CGRect(x: 16,
+                                     y: contentView.center.y,
+                                     width: 88, height: 20)
         
         countLabel.frame = CGRect(x: contentView.center.x - 8,
                                      y: contentView.center.y,
@@ -60,6 +65,10 @@ final class TableCell: UITableViewCell {
     }
     
     private func bindViewModel() {
+        viewModel.name
+            .drive(nameLabel.rx.text)
+            .disposed(by: disposeBag)
+        
         viewModel.count
             .drive(countLabel.rx.text)
             .disposed(by: disposeBag)

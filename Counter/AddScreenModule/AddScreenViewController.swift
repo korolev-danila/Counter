@@ -204,6 +204,7 @@ final class AddScreenViewController: UIViewController {
 extension AddScreenViewController {
     private func setupBinding() {
         bindingButtons()
+        bindingTextField()
         bindingModPicker()
         bindingValuePicker()
     }
@@ -226,16 +227,48 @@ extension AddScreenViewController {
             .disposed(by: disposeBag)
     }
     
+    private func bindingTextField() {
+        nameTextField.rx.text
+                    .orEmpty
+                    .bind(to: viewModel.nameSubj)
+                    .disposed(by: disposeBag)
+        viewModel.nameSubj
+            .subscribe(onNext: { [unowned self] text in
+                viewModel.localModel.name = text
+            })
+            .disposed(by: disposeBag)
+
+        countTextField.rx.text
+                    .orEmpty
+                    .bind(to: viewModel.countSubj)
+                    .disposed(by: disposeBag)
+        viewModel.countSubj
+            .subscribe(onNext: { [unowned self] text in
+                guard let int = Int(text) else { print("error save count"); return }
+                viewModel.localModel.count = int
+            })
+            .disposed(by: disposeBag)
+    }
+    
     private func bindingModPicker() {
-        Observable.just(["classic", "minimal", "date counter"])
+        Observable.just(["classic", "minimal", "time counter"])
                         .bind(to: modPicker.rx.itemTitles) { _, item in
                             return item
                         }
                         .disposed(by: disposeBag)
 
         modPicker.rx.itemSelected
-                        .subscribe(onNext: { (row, value) in
-                            print("selected: \(row)")
+                        .subscribe(onNext: { [unowned self] (row, value) in
+                            switch row {
+                            case 0:
+                                viewModel.localModel.type = .classic
+                            case 1:
+                                viewModel.localModel.type = .minimal
+                            case 2:
+                                viewModel.localModel.type = .timeCounter
+                            default:
+                                print("failed to recognize the row modPicker")
+                            }
                         })
                         .disposed(by: disposeBag)
     }
@@ -248,8 +281,8 @@ extension AddScreenViewController {
                         .disposed(by: disposeBag)
 
         valuePicker.rx.itemSelected
-                        .subscribe(onNext: { (row, value) in
-                            print("selected: \(row)")
+                        .subscribe(onNext: { [unowned self] (row, _) in
+                            viewModel.localModel.value = row + 1
                         })
                         .disposed(by: disposeBag)
     }

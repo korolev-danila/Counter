@@ -59,10 +59,6 @@ extension CoreDataManager: CoreDataProtocol {
         guard let entity = NSEntityDescription.entity(forEntityName: "Model",
                                                       in: context) else { return nil }
         let counter = Model(entity: entity , insertInto: context)
-        counter.name = ""
-        counter.count = 0
-        counter.isPlus = true
-        counter.index = 0 
         counter.id = UUID()
         return counter
     }

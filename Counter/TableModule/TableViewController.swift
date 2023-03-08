@@ -126,6 +126,9 @@ extension TableViewController {
             .zip(tableView.rx.itemSelected, tableView.rx.modelSelected(Model.self))
             .bind { [unowned self] indexPath, model in
                 showCounter(model, indexPath)
+                print("%%%%%%%%%%%%%")
+                print(model)
+                print("%%%%%%%%%%%%%")
                 print("Selected " + "\(model.count)" + " at \(indexPath)")
             }
             .disposed(by: disposeBag)
