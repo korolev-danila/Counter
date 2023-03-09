@@ -24,7 +24,7 @@ final class AddScreenViewModel {
     
     var localModel = LocalModel(name: "", count: 0, value: 1, type: .classic)
     var nameSubj = BehaviorSubject<String>(value: "")
-    var countSubj = BehaviorSubject<String>(value: "")
+    var countSubj = BehaviorSubject<String>(value: "0")
     
     var dissmisAddScreen: (Model?) -> () = { _ in }
     
@@ -37,17 +37,12 @@ final class AddScreenViewModel {
         print("deinit \(self.self)" )
     }
     
-    func binding() {
-//        Observable.asObservable(nameSubj)
-//            .subc
-    }
-    
     func addCounter() {
         guard let model = coreData.createNew() else { return }
         model.name = localModel.name
         model.count = Int64(localModel.count)
         model.value = Int16(localModel.value)
-        model.type = localModel.type
+        model.counterType = localModel.type
         dissmisAddScreen(model)
     }
 }

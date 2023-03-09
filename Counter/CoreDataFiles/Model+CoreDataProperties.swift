@@ -28,7 +28,7 @@ extension Model {
     @NSManaged public var isPlus: Bool
     @NSManaged public var index: Int16
     
-    @NSManaged public var type: CounterType
+    @NSManaged public var counterType: CounterType
 }
 
 extension Model: IdentifiableType {

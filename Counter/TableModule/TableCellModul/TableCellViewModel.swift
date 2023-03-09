@@ -14,7 +14,7 @@ class TableCellViewModel {
     var count: Driver<String>
 
     init(withCounter model: Model) {
-        switch model.type {
+        switch model.counterType {
         case .classic:
             name = .just("classic")
         case .minimal:

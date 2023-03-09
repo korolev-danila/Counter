@@ -244,7 +244,7 @@ extension AddScreenViewController {
                     .disposed(by: disposeBag)
         viewModel.countSubj
             .subscribe(onNext: { [unowned self] text in
-                guard let int = Int(text) else { print("error save count"); return }
+                guard let int = Int(text) else { return }
                 viewModel.localModel.count = int
             })
             .disposed(by: disposeBag)
