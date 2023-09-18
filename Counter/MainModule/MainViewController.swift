@@ -11,6 +11,7 @@ import RxCocoa
 
 final class MainViewController: UIViewController {
     
+  // test
     private let viewModel: MainViewModel
     
     private let disposeBag = DisposeBag()
